@@ -88,6 +88,13 @@ public class SecondActivity extends AppCompatActivity{
     }
 
     public void onClickDone(View v){
+        StringBuilder sB = new StringBuilder();
+        StringBuilder doubles = new StringBuilder();
+        for(int i = 0; i < items.size(); i++){
+            sB.append(items.get(i));
+            sB.append(",");
+        }
+        appInfo.setString(sB.toString(), 1);
         Intent intent = new Intent(this, ThirdActivity.class);
         startActivity(intent);
     }
