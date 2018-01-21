@@ -7,6 +7,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Button;
+import android.content.Intent;
 
 import java.util.*;
 
@@ -52,7 +53,7 @@ public class SecondActivity extends AppCompatActivity{
 
     }
 
-    public void onItBtnClick(){
+    public void onItBtnClick(View v){
         it_bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
@@ -64,7 +65,7 @@ public class SecondActivity extends AppCompatActivity{
             });
     }
 
-    public void onPrBtnClick(){
+    public void onPrBtnClick(View v){
         pr_bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
@@ -80,5 +81,10 @@ public class SecondActivity extends AppCompatActivity{
             }
 
         });
+    }
+
+    public void onClickDone(View v){
+        Intent intent = new Intent(this, ThirdActivity.class);
+        startActivity(intent);
     }
 }
