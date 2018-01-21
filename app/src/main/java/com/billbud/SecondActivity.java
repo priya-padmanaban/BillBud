@@ -53,9 +53,11 @@ public class SecondActivity extends AppCompatActivity{
                 prices);
         lv2.setAdapter(pr_adapter);
 
+        onItBtnClick();
+        onPrBtnClick();
     }
 
-    public void onItBtnClick(View v){
+    public void onItBtnClick(){
         it_bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
@@ -67,7 +69,7 @@ public class SecondActivity extends AppCompatActivity{
             });
     }
 
-    public void onPrBtnClick(View v){
+    public void onPrBtnClick(){
         pr_bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){

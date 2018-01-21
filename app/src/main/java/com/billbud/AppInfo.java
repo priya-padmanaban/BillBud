@@ -8,7 +8,7 @@ import android.content.SharedPreferences;
  */
 
 public class AppInfo {
-    
+
     private static AppInfo instance = null;
     private static final String NAMES = "Sahil";
     private static final String ITEMS = "Joven";
