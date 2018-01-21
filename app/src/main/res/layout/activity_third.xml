@@ -64,4 +64,11 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <ListView
+        android:layout_width="368dp"
+        android:layout_height="238dp"
+        android.id="@+id/listView"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="177dp" />
 </android.support.constraint.ConstraintLayout>
