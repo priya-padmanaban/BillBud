@@ -46,9 +46,9 @@ public class MainActivity extends AppCompatActivity {
         Done = (Button)findViewById(R.id.Done);
     }
 
-        public void onClick(View v) {
+        public void onClickFillIn(View v) {
             StringBuilder sB = new StringBuilder();
-            for(int i = 0; i < arrayList.size(); i++){
+            for(int i = 1; i < arrayList.size(); i++){
                 sB.append(arrayList.get(i));
                 sB.append(",");
             }
@@ -56,6 +56,19 @@ public class MainActivity extends AppCompatActivity {
             appInfo.setString(sB.toString(), 1);
             Log.d("after String set", "Made it past appInfo part");
             Intent i = new Intent(this, SecondActivity.class);
+            startActivity(i);
+        }
+
+        public void onClickScan(View v){
+            StringBuilder sB = new StringBuilder();
+            for(int i = 1; i < arrayList.size(); i++){
+                sB.append(arrayList.get(i));
+                sB.append(",");
+            }
+            Log.d("onClick", "Clicked on click");
+            appInfo.setString(sB.toString(), 1);
+            Log.d("after String set", "Made it past appInfo part");
+            Intent i = new Intent(this, BillScan.class);
             startActivity(i);
         }
 }

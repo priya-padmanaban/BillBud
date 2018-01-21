@@ -106,7 +106,7 @@ public class SecondActivity extends AppCompatActivity{
             sB.append(items.get(i));
             doubles.append(prices.get(i));
             sB.append(",");
-            doubles.append(".");
+            doubles.append(",");
         }
         appInfo.setString(sB.toString(), 2);
         appInfo.setString(doubles.toString(), 3);
