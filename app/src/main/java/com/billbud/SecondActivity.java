@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Button;
 import android.content.Intent;
+import android.util.Log;
 
 import java.util.*;
 
@@ -36,6 +37,7 @@ public class SecondActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
+        appInfo = AppInfo.getInstance(this);
         it_ed = (EditText) findViewById(R.id.et_item);
         pr_ed = (EditText) findViewById(R.id.et_price);
         tax_edit = (EditText) findViewById(R.id.editTax);
@@ -92,6 +94,7 @@ public class SecondActivity extends AppCompatActivity{
     public void onClickDone(View v){
         Double tax;
         String input = tax_edit.getText().toString();
+        Log.d("tax input:", input);
         /*if(input == null || input.isEmpty()){
             tax = 0.0;
         } else {
@@ -105,9 +108,10 @@ public class SecondActivity extends AppCompatActivity{
             sB.append(",");
             doubles.append(".");
         }
-        appInfo.setString(input, 5);
         appInfo.setString(sB.toString(), 2);
         appInfo.setString(doubles.toString(), 3);
+        appInfo.setString(input, 5);
+        Log.d("after calls to app info", "WHats wrong?");
         Intent intent = new Intent(this, ThirdActivity.class);
         startActivity(intent);
     }
