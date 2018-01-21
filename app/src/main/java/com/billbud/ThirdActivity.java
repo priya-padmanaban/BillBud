@@ -32,6 +32,50 @@ public class ThirdActivity extends AppCompatActivity {
 
     TextView nameView;
     Button next;
+    ListView listView;
+
+    class MyAdapter extends BaseAdapter {
+        @Override
+        public int getCount(){
+            return items.size();
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int i){
+            return 0;
+        }
+
+        @Override
+        public View getView(int i, View view, ViewGroup viewGroup){
+            view = getLayoutInflater().inflate(R.layout.single_row,null);
+
+            TextView textView = (TextView) view.findViewById(R.id.nameView);
+            CheckBox checkBox = (CheckBox) view.findViewById(R.id.checkBox1);
+
+            textView.setText(items.get(i));
+            checkBox.setId(i);
+            checkBox.setText(items.get(i));
+            checkBox.setOnClickListener(getOnClickCheck(checkBox));
+            listView.addView(checkBox);
+
+            return view;
+
+        }
+
+        View.OnClickListener getOnClickCheck(final Button button){
+            return new View.OnClickListener(){
+                public void onClick(View v){
+                    Log.d("Clicked","Checkbox iD" + button.getId());
+                }
+            };
+        }
+
+    }
 
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -39,6 +83,7 @@ public class ThirdActivity extends AppCompatActivity {
         appInfo = AppInfo.getInstance(this);
         nameView = (TextView)findViewById(R.id.nameView);
         next = (Button)findViewById(R.id.next);
+        listView = (ListView)findViewById(R.id.lv);
 
         String tempString = appInfo.sharedStringNames;
         Log.d("names array: ", tempString);
@@ -80,8 +125,11 @@ public class ThirdActivity extends AppCompatActivity {
             d = Double.parseDouble(eachElement[k]);
             prices.add(d);
         }
+        MyAdapter myAdapter = new MyAdapter();
+        listView.setAdapter(myAdapter);
 
         ind_costs = new ArrayList<Double>();
+
 
     }
 
@@ -97,4 +145,5 @@ public class ThirdActivity extends AppCompatActivity {
             }
         });
     }
+
 }
