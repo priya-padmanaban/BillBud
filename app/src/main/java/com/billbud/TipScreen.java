@@ -20,7 +20,7 @@ public class TipScreen extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.tip_screen);
 
         tipRate = (EditText) findViewById(R.id.tipAmount);
         tipAway = (Button) findViewById(R.id.submitTipButton);
