@@ -28,6 +28,37 @@ public class ThirdActivity extends AppCompatActivity {
         setContentView(R.layout.activity_second);
         appInfo = AppInfo.getInstance(this);
 
+    }
+
+    protected void onResume(){
+        super.onResume();
+        String tempString = appInfo.sharedStringNames;
+        String[] eachElement = tempString.split(",");
+        //Rebuild the names ArrayList from the shared string
+        names = new ArrayList<String>();
+        for(int i = 0; i < eachElement.length; i++){
+            names.add(eachElement[i]);
+        }
+
+        //Rebuild the items ArrayList
+        tempString = appInfo.sharedStringItems;
+        eachElement = tempString.split(",");
+        items = new ArrayList<String>();
+        for(int i = 0; i < eachElement.length; i++){
+            items.add(eachElement[i]);
+        }
+
+        //Rebuild the prices
+        tempString = appInfo.sharedStringPrices;
+        eachElement = tempString.split(",");
+        prices = new ArrayList<Double>();
+        Double d;
+        for(int k = 0; k < eachElement.length; k++){
+            d = Double.parseDouble(eachElement[k]);
+            prices.add(d);
+        }
+
+        ind_costs = new ArrayList<Double>();
 
     }
 }

@@ -92,9 +92,12 @@ public class SecondActivity extends AppCompatActivity{
         StringBuilder doubles = new StringBuilder();
         for(int i = 0; i < items.size(); i++){
             sB.append(items.get(i));
+            doubles.append(prices.get(i));
             sB.append(",");
+            doubles.append(".");
         }
-        appInfo.setString(sB.toString(), 1);
+        appInfo.setString(sB.toString(), 2);
+        appInfo.setString(doubles.toString(), 3);
         Intent intent = new Intent(this, ThirdActivity.class);
         startActivity(intent);
     }
