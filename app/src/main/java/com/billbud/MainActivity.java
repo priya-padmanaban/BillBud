@@ -13,6 +13,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
+    static final public String MYPREFS = "myprefs";
+
+    AppInfo appInfo;
+
     Button Add, Done;
     private ArrayList<String> arrayList;
     private ArrayAdapter<String> adapter;
@@ -21,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        appInfo = AppInfo.getInstance(this);
 
         String names = "";
         arrayList = new ArrayList<>(Arrays.asList(names));
@@ -41,6 +46,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
         public void onClick(View v) {
+            StringBuilder sB = new StringBuilder();
+            for(int i = 0; i < arrayList.size(); i++){
+                sB.append(arrayList.get(i));
+                sB.append(",");
+            }
+            appInfo.setString(sB.toString(), 1);
             Intent i = new Intent(this, SecondActivity.class);
             startActivity(i);
         }

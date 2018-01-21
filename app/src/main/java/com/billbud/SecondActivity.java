@@ -16,6 +16,8 @@ import java.util.*;
  */
 
 public class SecondActivity extends AppCompatActivity{
+    AppInfo appInfo;
+
     EditText it_ed;
     EditText pr_ed;
     ListView lv1;
