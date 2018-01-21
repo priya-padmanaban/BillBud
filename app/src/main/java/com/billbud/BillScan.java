@@ -1,32 +1,32 @@
 package com.billbud;
 
-import android.app.AlertDialog;
-import android.content.ContentValues;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.provider.MediaStore;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.util.SparseArray;
-import android.view.View;
-import android.widget.TextView;
+        import android.app.AlertDialog;
+        import android.content.ContentValues;
+        import android.content.Intent;
+        import android.graphics.Bitmap;
+        import android.graphics.BitmapFactory;
+        import android.net.Uri;
+        import android.provider.MediaStore;
+        import android.support.v7.app.AppCompatActivity;
+        import android.os.Bundle;
+        import android.text.method.ScrollingMovementMethod;
+        import android.util.DisplayMetrics;
+        import android.util.Log;
+        import android.util.SparseArray;
+        import android.view.View;
+        import android.widget.TextView;
 
-import com.google.android.gms.vision.Frame;
-import com.google.android.gms.vision.text.TextBlock;
-import com.google.android.gms.vision.text.TextRecognizer;
+        import com.google.android.gms.vision.Frame;
+        import com.google.android.gms.vision.text.TextBlock;
+        import com.google.android.gms.vision.text.TextRecognizer;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+        import java.io.FileNotFoundException;
+        import java.io.IOException;
+        import java.io.InputStream;
+        import java.util.ArrayList;
+        import java.util.Collections;
+        import java.util.Comparator;
+        import java.util.List;
 
 public class BillScan extends AppCompatActivity {
     private static final int REQUEST_GALLERY = 0;
