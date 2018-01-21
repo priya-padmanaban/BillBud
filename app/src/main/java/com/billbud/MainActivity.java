@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,7 +52,9 @@ public class MainActivity extends AppCompatActivity {
                 sB.append(arrayList.get(i));
                 sB.append(",");
             }
+            Log.d("onClick", "Clicked on click");
             appInfo.setString(sB.toString(), 1);
+            Log.d("after String set", "Made it past appInfo part");
             Intent i = new Intent(this, SecondActivity.class);
             startActivity(i);
         }

@@ -20,6 +20,7 @@ public class SecondActivity extends AppCompatActivity{
 
     EditText it_ed;
     EditText pr_ed;
+    EditText tax_edit;
     ListView lv1;
     ListView lv2;
 
@@ -37,6 +38,7 @@ public class SecondActivity extends AppCompatActivity{
         setContentView(R.layout.activity_second);
         it_ed = (EditText) findViewById(R.id.et_item);
         pr_ed = (EditText) findViewById(R.id.et_price);
+        tax_edit = (EditText) findViewById(R.id.editTax);
         lv1 = (ListView) findViewById(R.id.lv_item);
         lv2 = (ListView) findViewById((R.id.lv_price));
 
@@ -88,6 +90,13 @@ public class SecondActivity extends AppCompatActivity{
     }
 
     public void onClickDone(View v){
+        Double tax;
+        String input = tax_edit.getText().toString();
+        /*if(input == null || input.isEmpty()){
+            tax = 0.0;
+        } else {
+            tax = Double.parseDouble(input);
+        }*/
         StringBuilder sB = new StringBuilder();
         StringBuilder doubles = new StringBuilder();
         for(int i = 0; i < items.size(); i++){
@@ -96,6 +105,7 @@ public class SecondActivity extends AppCompatActivity{
             sB.append(",");
             doubles.append(".");
         }
+        appInfo.setString(input, 5);
         appInfo.setString(sB.toString(), 2);
         appInfo.setString(doubles.toString(), 3);
         Intent intent = new Intent(this, ThirdActivity.class);

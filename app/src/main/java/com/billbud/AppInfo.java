@@ -14,6 +14,8 @@ public class AppInfo {
     private static final String ITEMS = "Joven";
     private static final String PRICES = "Markanpay";
     private static final String IND_COSTS = "Apple";
+    private static final String TAX = "notwithoutrepresentation";
+    private static final String TIP = "Just The Tip";
 
     protected AppInfo() {
 
@@ -24,6 +26,8 @@ public class AppInfo {
     public String sharedStringItems;
     public String sharedStringPrices;
     public String sharedStringCosts;
+    public String sharedStringTax;
+    public String sharedStringTip;
 
     private Context my_context;
 
@@ -36,6 +40,8 @@ public class AppInfo {
             instance.sharedStringItems = settings.getString(ITEMS, null);
             instance.sharedStringPrices = settings.getString(PRICES, null);
             instance.sharedStringCosts = settings.getString(IND_COSTS,null);
+            instance.sharedStringTax = settings.getString(TAX,null);
+            instance.sharedStringTip = settings.getString(TIP, null);
 
         }
         return instance;
@@ -58,9 +64,19 @@ public class AppInfo {
                 sharedStringPrices = c;
                 editor.putString(PRICES, c);
                 break;
-            default:
+            case(4):
                 sharedStringCosts = c;
                 editor.putString(IND_COSTS, c);
+                break;
+            case(5):
+                sharedStringTax = c;
+                editor.putString(TAX, c);
+                break;
+            case(6):
+                sharedStringTip = c;
+                editor.putString(TIP, c);
+                break;
+            default:
                 break;
         }
         editor.commit();
