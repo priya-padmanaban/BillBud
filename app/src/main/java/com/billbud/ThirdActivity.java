@@ -1,8 +1,10 @@
 package com.billbud;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import java.util.*;
 
@@ -14,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Button;
 import android.content.Intent;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
@@ -34,78 +37,69 @@ public class ThirdActivity extends AppCompatActivity {
     Button next;
     ListView listView;
 
-    class MyAdapter extends BaseAdapter {
-        @Override
-        public int getCount(){
-            return items.size();
+    private class ListElement {
+        ListElement(String item, boolean checked){
+            this.item = item;
+            this.checked = checked;
         }
 
-        @Override
-        public Object getItem(int i) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int i){
-            return 0;
-        }
-
-        @Override
-        public View getView(int i, View view, ViewGroup viewGroup){
-            view = getLayoutInflater().inflate(R.layout.single_row,null);
-
-            TextView textView = (TextView) view.findViewById(R.id.nameView);
-            CheckBox checkBox = (CheckBox) view.findViewById(R.id.checkBox1);
-
-            textView.setText(items.get(i));
-            checkBox.setId(i);
-            checkBox.setText(items.get(i));
-            checkBox.setOnClickListener(getOnClickCheck(checkBox));
-            listView.addView(checkBox);
-
-            return view;
-
-        }
-
-        View.OnClickListener getOnClickCheck(final Button button){
-            return new View.OnClickListener(){
-                public void onClick(View v){
-                    Log.d("Clicked","Checkbox iD" + button.getId());
-                }
-            };
-        }
-
+        public String item;
+        public String price;
+        public boolean checked;
     }
 
+    private ArrayList<ListElement> aList;
+
+    private class MyAdapter extends ArrayAdapter<ListElement> {
+        int resource;
+        Context context;
+
+        public MyAdapter(Context _context, int _resource, List<ListElement> things){
+            super(_context, _resource, things);
+            resource = _resource;
+            context = _context;
+        }
+
+            //Nelson
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent){
+            RelativeLayout newView;
+
+            final ListElement item = getItem(position);
+
+            //Inflate view
+            if(convertView == null) {
+                newView = new RelativeLayout(getContext());
+                LayoutInflater vi = (LayoutInflater)
+                        getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                vi.inflate(resource, newView, true);
+            } else {
+                newView = (RelativeLayout) convertView;
+            }
+
+            TextView titleTextView = (TextView) newView.findViewById(R.id.textView1);
+            CheckBox checkBox = (CheckBox) newView.findViewById(R.id.checkBox1);
+            titleTextView.setText(item.item);
+            if(checkBox.isChecked()){
+                checkBox.setChecked(false);
+            }
+
+            return newView;
+        }
+    }
+
+    private MyAdapter myAdapter;
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_third);
         appInfo = AppInfo.getInstance(this);
         nameView = (TextView)findViewById(R.id.nameView);
-        next = (Button)findViewById(R.id.next);
-        listView = (ListView)findViewById(R.id.lv);
-
-        String tempString = appInfo.sharedStringNames;
-        Log.d("names array: ", tempString);
-        String[] eachElement = tempString.split(",");
-
-        //Rebuild the names ArrayList from the shared string
-        names = new ArrayList<String>();
-        Log.d("eachElement", eachElement.length + "");
-        nameView.setText(eachElement[0]);
-        for(int i = 0; i < eachElement.length; i++){
-            names.add(eachElement[i]);
-            Log.d("Read names ArrayList: ", names.get(i));
-        }
-
-        //Log.d("Names.get(0)", names.get(0));
-        //iter = names.iterator();
-        nameView.setText(names.get(0));
+        aList = new ArrayList<ListElement>();
 
         //Rebuild the items ArrayList
-        tempString = appInfo.sharedStringItems;
+        String tempString = appInfo.sharedStringItems;
         Log.d("Items", tempString);
-        eachElement = tempString.split(",");
+        String[] eachElement = tempString.split(",");
 
         items = new ArrayList<String>();
         for(int i = 0; i < eachElement.length; i++){
@@ -125,8 +119,29 @@ public class ThirdActivity extends AppCompatActivity {
             d = Double.parseDouble(eachElement[k]);
             prices.add(d);
         }
-        MyAdapter myAdapter = new MyAdapter();
-        listView.setAdapter(myAdapter);
+
+        next = (Button)findViewById(R.id.next);
+        listView = (ListView)findViewById(R.id.lv);
+        myAdapter = new MyAdapter(this, R.layout.single_row, aList);
+
+        tempString = appInfo.sharedStringNames;
+        Log.d("names array: ", tempString);
+        eachElement = tempString.split(",");
+
+        //Rebuild the names ArrayList from the shared string
+        names = new ArrayList<String>();
+        Log.d("eachElement", eachElement.length + "");
+        nameView.setText(eachElement[0]);
+        for(int i = 0; i < eachElement.length; i++){
+            names.add(eachElement[i]);
+            Log.d("Read names ArrayList: ", names.get(i));
+        }
+
+        //Log.d("Names.get(0)", names.get(0));
+        //iter = names.iterator();
+        nameView.setText(names.get(0));
+
+
 
         ind_costs = new ArrayList<Double>();
 
