@@ -95,11 +95,12 @@ public class SecondActivity extends AppCompatActivity{
         Double tax;
         String input = tax_edit.getText().toString();
         Log.d("tax input:", input);
-        /*if(input == null || input.isEmpty()){
+        if(input == null || input.isEmpty()){
             tax = 0.0;
         } else {
             tax = Double.parseDouble(input);
-        }*/
+        }
+
         StringBuilder sB = new StringBuilder();
         StringBuilder doubles = new StringBuilder();
         for(int i = 0; i < items.size(); i++){
