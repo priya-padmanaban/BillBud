@@ -9,6 +9,8 @@ import android.view.View;
 import java.util.*;
 
 import android.view.ViewGroup;
+import android.graphics.Color;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
@@ -32,6 +34,12 @@ public class ThirdActivity extends AppCompatActivity {
     ArrayList<Double> prices;
     ArrayList<Double> ind_costs;
     Iterator<String> iter;
+
+    double tax;
+
+    int[][] shared;
+
+    int user_count = 0;
     //Iterator<ArrayList<String>> iter;
 
     TextView nameView;
@@ -39,15 +47,20 @@ public class ThirdActivity extends AppCompatActivity {
     ListView listView;
 
     private class ListElement {
-        ListElement(String item, Double price){
+        ListElement(String item, String price){
             this.item = item;
             this.price = price;
             this.checked = false;
         }
 
         public String item;
-        public Double price;
+        public String price;
         public boolean checked;
+
+        @Override
+        public String toString(){
+            return this.item + " $" + this.price;
+        }
     }
 
     private ArrayList<ListElement> aList;
@@ -86,40 +99,60 @@ public class ThirdActivity extends AppCompatActivity {
                 titleTextView.setText(elem.item);
                 subtitleTextView.setText(elem.price + "");
 
-                // Set a listener for the whole list item
-                /*newView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        // Action to do when cell is clicked
-                        String s = v.getTag().toString();
-                        int duration = Toast.LENGTH_SHORT;
-                        Toast toast = Toast.makeText(context, s, duration);
-                        toast.show();
-
-                        // Intent to go to next activity passing url
-                        Intent intent = new Intent(context, ReaderActivity.class);
-                        intent.putExtra("url", v.getTag().toString());
-                        startActivity(intent);
-                    }
-                });*/
-
                 return newView;
             }
     }
 
     private MyAdapter myAdapter;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_third);
         appInfo = AppInfo.getInstance(this);
         nameView = (TextView) findViewById(R.id.nameView);
         aList = new ArrayList<ListElement>();
+        next = (Button)findViewById(R.id.next);
+
         myAdapter = new MyAdapter(this, R.layout.single_row, aList);
         ListView myListView = (ListView) findViewById(R.id.lv);
         myListView.setAdapter(myAdapter);
         myAdapter.notifyDataSetChanged();
         rebuild_lists();
+
+        //2D array that will contain either 1s or 0s to indicate whether or not a certain user is
+        //Paying for a specific item
+        shared = new int[names.size()][items.size()];
+
+
+        //Here we need to specify what will happen when the individual item is clicked
+        //When an item is clicked, its text color will turn RED if it has not been selected,
+        //And it will be flagged as an item that the person who's name appears at the top of the
+        //Screen is paying for
+        myListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id){
+                int item_index = (int) id;
+                TextView item_name = (TextView) view.findViewById(R.id.food);
+                TextView item_price = (TextView) view.findViewById(R.id.price);
+
+                //If the item has already been selected, deselect it. The user may have accidentally
+                //Clicked it and wants to deselect the given item.
+                if(aList.get(item_index).checked){
+                    item_name.setTextColor(Color.GRAY);
+                    item_price.setTextColor(Color.GRAY);
+                    shared[user_count][item_index] = 0;
+                    aList.get(item_index).checked = false;
+                    Log.d("Already clicked", " Should turn black");
+                    return;
+                }
+                shared[user_count][item_index] = 1;
+                aList.get(item_index).checked = true;
+                item_name.setTextColor(Color.RED);
+                item_price.setTextColor(Color.RED);
+
+            }
+        });
+
     }
 
         public void rebuild_lists(){
@@ -145,11 +178,9 @@ public class ThirdActivity extends AppCompatActivity {
                 Log.d("element", eachElement[k]);
                 d = Double.parseDouble(eachElement[k]);
                 prices.add(d);
+                aList.add(new ListElement(items.get(k), "$" + eachElement[k])); //Add the item and its corresponding price to the list displayed by app
             }
 
-            next = (Button)findViewById(R.id.next);
-            listView = (ListView)findViewById(R.id.lv);
-            myAdapter = new MyAdapter(this, R.layout.single_row, aList);
 
             tempString = appInfo.sharedStringNames;
             Log.d("names array: ", tempString);
@@ -165,8 +196,13 @@ public class ThirdActivity extends AppCompatActivity {
             }
 
             //Log.d("Names.get(0)", names.get(0));
-            //iter = names.iterator();
+            iter = names.iterator();
+            iter.next();
+
             nameView.setText(names.get(0));
+
+            tempString = appInfo.sharedStringTax;
+            tax = Double.parseDouble(tempString);
 
             ind_costs = new ArrayList<Double>();
 
@@ -176,15 +212,46 @@ public class ThirdActivity extends AppCompatActivity {
     //What we need to to here is to figure out how to save the data from the clicked boxes,
     //reset the boxes, and continue to take in the next input for the next name
     public void onClickNext(View v){
-        iter = names.iterator();
-        next.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(iter.hasNext())
-                    nameView.setText(iter.next());
-                //Else we go to the next page
+        Log.d("number of names " , names.size() + "");
+
+        //First we need to add up what the user is paying (no tip yet)
+        double total = 0.0;
+        for(int i = 0; i < aList.size(); i++){
+            if(shared[user_count][i] == 1){
+                total += prices.get(i);
             }
-        });
+        }
+
+        ind_costs.add(total + (tax/names.size()));
+        Log.d("Total cost for user " + user_count, " " + (total+(tax/names.size())));
+
+        if(iter.hasNext()) {
+            //Iterate to the next name in the list, reset all colors of the items in the list
+            nameView.setText(iter.next());
+
+            ListView myListView = (ListView) findViewById(R.id.lv);
+
+            View row;
+
+            //Reset all of the rows back to gray
+            for(int i = 0; i < myListView.getCount(); i++){
+                row = myListView.getChildAt(i);
+                TextView food_item = (TextView) row.findViewById(R.id.food);
+                TextView item_price = (TextView) row.findViewById(R.id.price);
+                food_item.setTextColor(Color.GRAY);
+                item_price.setTextColor(Color.GRAY);
+                aList.get(i).checked = false;
+            }
+            Log.d("onClickNext", " All rows reset");
+
+            //Now we must add up the price for the individual
+
+            user_count++;
+
+        } else {
+            
+        }
+        //Else we go to the next page
     }
 
 }

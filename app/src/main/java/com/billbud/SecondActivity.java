@@ -9,6 +9,7 @@ import android.widget.ListView;
 import android.widget.Button;
 import android.content.Intent;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.*;
 
@@ -30,8 +31,8 @@ public class SecondActivity extends AppCompatActivity{
 
     ArrayList<String> items;
     ArrayAdapter<String> it_adapter;
-    ArrayList<Double> prices;
-    ArrayAdapter<Double> pr_adapter;
+    ArrayList<String> prices;
+    ArrayAdapter<String> pr_adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -48,12 +49,12 @@ public class SecondActivity extends AppCompatActivity{
         pr_bt = (Button) findViewById(R.id.pr_button);
 
         items = new ArrayList<String>();
-        prices = new ArrayList<Double>();
+        prices = new ArrayList<String>();
 
         it_adapter = new ArrayAdapter<String>(SecondActivity.this, android.R.layout.simple_list_item_1,
                 items);
         lv1.setAdapter(it_adapter);
-        pr_adapter = new ArrayAdapter<Double>(SecondActivity.this, android.R.layout.simple_list_item_1,
+        pr_adapter = new ArrayAdapter<String>(SecondActivity.this, android.R.layout.simple_list_item_1,
                 prices);
         lv2.setAdapter(pr_adapter);
 
@@ -77,14 +78,19 @@ public class SecondActivity extends AppCompatActivity{
         pr_bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
-                Double cost;
+                //Double cost;
                 String input = pr_ed.getText().toString();
-                if(input == null || input.isEmpty()) {
+                /*if(input == null || input.isEmpty()) {
                     cost = 0.0;
                 } else {
                     cost = Double.parseDouble(input);
+                }*/
+                if(input.charAt(0) < 48 || input.charAt(0) > 57 ){
+                    Toast toast = Toast.makeText(getBaseContext(), "Please enter a decimal number (Excluding $)", Toast.LENGTH_SHORT);
+                    toast.show();
+                    return;
                 }
-                prices.add(cost);
+                prices.add(input);
                 pr_adapter.notifyDataSetChanged();
             }
 
