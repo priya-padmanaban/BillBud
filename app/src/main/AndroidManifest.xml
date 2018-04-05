@@ -19,6 +19,8 @@
         </activity>
         <activity android:name=".SecondActivity" />
         <activity android:name=".ThirdActivity" />
+        <activity android:name=".TipScreen"/>
+        <activity android:name=".FinalActivity"/>
         <activity android:name=".BillScan"/>
     </application>
 

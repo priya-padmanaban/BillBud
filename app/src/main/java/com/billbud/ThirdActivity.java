@@ -44,7 +44,7 @@ public class ThirdActivity extends AppCompatActivity {
 
     TextView nameView;
     Button next;
-    ListView listView;
+    //ListView listView;
 
     private class ListElement {
         ListElement(String item, String price){
@@ -204,7 +204,8 @@ public class ThirdActivity extends AppCompatActivity {
             tempString = appInfo.sharedStringTax;
             tax = Double.parseDouble(tempString);
 
-            ind_costs = new ArrayList<Double>();
+            //ind_costs used for debugging purposes in this activity
+            //ind_costs = new ArrayList<Double>();
 
 
         }
@@ -215,15 +216,15 @@ public class ThirdActivity extends AppCompatActivity {
         Log.d("number of names " , names.size() + "");
 
         //First we need to add up what the user is paying (no tip yet)
-        double total = 0.0;
+        /*double total = 0.0;
         for(int i = 0; i < aList.size(); i++){
             if(shared[user_count][i] == 1){
                 total += prices.get(i);
             }
-        }
+        }*/
 
-        ind_costs.add(total + (tax/names.size()));
-        Log.d("Total cost for user " + user_count, " " + (total+(tax/names.size())));
+        //ind_costs.add(total + (tax/names.size()));
+        //Log.d("Total cost for user " + user_count, " " + (total+(tax/names.size())));
 
         if(iter.hasNext()) {
             //Iterate to the next name in the list, reset all colors of the items in the list
@@ -244,14 +245,69 @@ public class ThirdActivity extends AppCompatActivity {
             }
             Log.d("onClickNext", " All rows reset");
 
-            //Now we must add up the price for the individual
-
             user_count++;
 
         } else {
-            
+            //Priya's code from the prototype
+
+            //This array will store the column totals
+            int[] totalShared = columnSum(shared);
+
+            //Divide the items by the number in total shared
+            double[] div_amounts = new double[items.size()];
+            double total_price = 0.0;
+            for(int i = 0; i < items.size(); i++){
+                div_amounts[i] = (double)(prices.get(i)) / (double)(totalShared[i]);
+                total_price += div_amounts[i];
+            }
+
+            double tax = Double.parseDouble(appInfo.sharedStringTax);
+            double tax_percent = tax/total_price;
+
+            //Now we will calculate the individual costs (before tip is applied)
+            double[] ind_costs = new double[names.size()];
+
+            for(int i = 0; i < ind_costs.length; i++){
+                double total = 0;
+                for(int k = 0; k < items.size(); k++){
+                    if(shared[i][k] == 1){
+                        total += div_amounts[k];
+                    }
+                }
+                total += total*tax_percent;
+                ind_costs[i] = total;
+            }
+
+            StringBuilder costs = new StringBuilder();
+
+            for(int i = 0; i < ind_costs.length; i++){
+                costs.append(ind_costs[i]);
+                costs.append(",");
+            }
+
+
+            //Store the running total for each individual
+
+            appInfo.setString(costs.toString(), 4);
+            Log.d("Heading to tip activity", "");
+            Intent intent = new Intent(this, TipScreen.class);
+            startActivity(intent);
         }
         //Else we go to the next page
+    }
+
+    //this method adds up, for each item, the number of people sharing the item
+    public static int[] columnSum(int[][] array){
+        int size = array[0].length;
+        int temp[] = new int[size];
+
+        for(int i = 0; i < array.length; i++){
+            for(int j = 0; j < array[i].length; j++){
+                temp[j] += array[i][j];
+            }
+        }
+
+        return temp;
     }
 
 }

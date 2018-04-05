@@ -12,7 +12,11 @@ import android.widget.EditText;
  */
 
 public class TipScreen extends AppCompatActivity{
+    AppInfo appInfo;
+
     double tip;
+
+    double[] ind_costs;
 
     EditText tipRate;
     Button tipAway;
@@ -22,14 +26,40 @@ public class TipScreen extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tip_screen);
 
+        appInfo = appInfo.getInstance(this);
+
         tipRate = (EditText) findViewById(R.id.tipAmount);
         tipAway = (Button) findViewById(R.id.submitTipButton);
-        tipAway.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                tip = Double.parseDouble(tipRate.getText().toString());
-                tip = tip/100;
-            }
-        });
+
+        String temp = appInfo.sharedStringCosts;
+        String[] each_element = temp.split(",");
+
+        ind_costs = new double[each_element.length];
+        for(int i = 0; i < each_element.length; i++){
+            ind_costs[i] = Double.parseDouble(each_element[i]);
+        }
+
+
+    }
+
+    public void onClickTip(View v){
+        tip = Double.parseDouble(tipRate.getText().toString());
+        tip = tip/100.0;
+
+        //Now we apply the tip to the adjusted costs for each user
+        for(int i = 0; i < ind_costs.length; i++){
+            ind_costs[i] += ind_costs[i]*tip;
+        }
+
+        StringBuilder costs = new StringBuilder();
+
+        for(int i = 0; i < ind_costs.length; i++){
+            costs.append(ind_costs[i]);
+            costs.append(",");
+        }
+
+        appInfo.setString(costs.toString(), 4);
+        Intent intent = new Intent(this, FinalActivity.class);
+        startActivity(intent);
     }
 }
